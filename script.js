@@ -78,11 +78,11 @@ exportToExcel = {
                     'forecastTraffic': $(".b-group-phrase__current-traffic-volume", $(this)).text()
                 }
                 $(".b-group-phrase__price-value_type_bid", $(this)).each(function (){
-                    let textValue = $(this).text().split(' ').join('');
+                    let textValue = $(this).text().replace(' ', '');
                     phraseInfo.forecastRates.push(parseFloat(textValue) || textValue);
                 });
                 $(".b-group-phrase__price-value_type_amnesty", $(this)).each(function (){
-                    let textValue = $(this).text().split(' ').join('');
+                    let textValue = $(this).text().replace(' ', '');
                     phraseInfo.writtenOffPrice.push(parseFloat(textValue) || textValue)
                 });
                 groupInfo.groupPhrases.push(phraseInfo);
