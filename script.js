@@ -42,18 +42,26 @@ exportToExcel = {
             'left': '10px',
             'cursor': 'pointer',
         });
-        this.exportToExcelBtn.click(() => this.prepareData());
+        this.exportToExcelBtn.click(() => this.process());
+    },
+    "process": function () {
+        this.exportToExcelBtn.prop("disabled", true);
+        this.prepareData();
+        this.mappingData();
+        this.downloadExcelFile();
+        this.tableBody.html(this.addTableRow(tableHeaders));
+        this.exportToExcelBtn.prop("disabled", false);
     },
     "addTableRow": function (data) {
-        let html = '';
+        let html;
         data.groupPhrases.map(function (e){
             html = $("<tr></tr>");
-            html.append("<td>" + data.groupName)
-                .append("<td>" + data.groupNumber);
-            html.append("<td>" + e.phrase);
+                html.append("<td>" + data.groupName)
+                .append("<td>" + data.groupNumber)
+                .append("<td>" + e.phrase);
             for (let i = 0; i < forecastsMax; i++) {
-                html.append("<td>" + (e.forecastRates[i] || ''));
-                html.append("<td>" + (e.writtenOffPrice[i] || ''));
+                html.append("<td>" + (e.forecastRates[i] || ''))
+                    .append("<td>" + (e.writtenOffPrice[i] || ''));
             }
             html.append("<td>" + e.forecastTraffic);
         })
@@ -61,7 +69,6 @@ exportToExcel = {
     },
     "prepareData": function () {
         let _this = this;
-        this.exportToExcelBtn.prop("disabled", true);
         $(".b-campaign-group").each(function (){
             let groupInfo = {
                 'groupName': $(".b-campaign-group__group-title", $(this)).text(),
@@ -87,25 +94,19 @@ exportToExcel = {
             });
             _this.exportData.push(groupInfo);
         });
-
-        this.mappingData();
     },
     "mappingData": function () {
         let _this = this;
         this.exportData.map(function (e){
             _this.tableBody.append(_this.addTableRow(e));
         })
-        _this.downloadExcelFile();
-        _this.exportToExcelBtn.prop("disabled", false);
     },
     "downloadExcelFile": function () {
         let _this = this;
         let filename = $("title").text();
-
         let wb = XLSX.utils.table_to_book(
             _this.tableToExport[0], {sheet:"List 1"}
         );
-
         return  XLSX.writeFile(wb, filename + '.xls');
     }
 }
