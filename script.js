@@ -52,10 +52,8 @@ exportToExcel = {
                 .append("<td>" + data.groupNumber);
             html.append("<td>" + e.phrase);
             for (let i = 0; i < forecastsMax; i++) {
-                let forecastRates = (e.forecastRates[i] !== undefined) ? e.forecastRates[i] : '';
-                let writtenOffPrice = (e.writtenOffPrice[i] !== undefined) ? e.writtenOffPrice[i] : '';
-                html.append("<td>" + forecastRates);
-                html.append("<td>" + writtenOffPrice);
+                html.append("<td>" + (e.forecastRates[i] || ''));
+                html.append("<td>" + (e.writtenOffPrice[i] || ''));
             }
             html.append("<td>" + e.forecastTraffic);
         })
@@ -79,13 +77,11 @@ exportToExcel = {
                 }
                 $(".b-group-phrase__price-value_type_bid", $(this)).each(function (){
                     let textValue = $(this).text().split(' ').join('');
-                    let floatValue = parseFloat(textValue) ? parseFloat(textValue) : textValue;
-                    phraseInfo.forecastRates.push(floatValue);
+                    phraseInfo.forecastRates.push(parseFloat(textValue) || textValue);
                 });
                 $(".b-group-phrase__price-value_type_amnesty", $(this)).each(function (){
                     let textValue = $(this).text().split(' ').join('');
-                    let floatValue = parseFloat(textValue) ? parseFloat(textValue) : textValue;
-                    phraseInfo.writtenOffPrice.push(floatValue)
+                    phraseInfo.writtenOffPrice.push(parseFloat(textValue) || textValue)
                 });
                 groupInfo.groupPhrases.push(phraseInfo);
             });
