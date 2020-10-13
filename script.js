@@ -23,10 +23,6 @@ const tableHeaders = {
 }
 
 exportToExcel = {
-    "exportData": [],
-    "exportToExcelBtn": null,
-    "tableToExport": null,
-    "tableBody": null,
     "init": function () {
         $("html").append("<table style='display: none' id='tableToExport'>");
         $("html").append("<button type='button' id='exportToExcelBtn'>Скачать XLS");
