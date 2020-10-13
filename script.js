@@ -45,8 +45,6 @@ exportToExcel = {
     },
     "process": function () {
         this.exportToExcelBtn.prop("disabled", true);
-        this.exportData = [];
-        this.addTableRows(tableHeaders);
         this.prepareData();
         this.mappingData();
         this.downloadExcelFile();
@@ -69,6 +67,7 @@ exportToExcel = {
     },
     "prepareData": function () {
         let _this = this;
+        _this.exportData = [];
         $(".b-campaign-group").each(function (){
             let groupInfo = {
                 'groupName': $(".b-campaign-group__group-title", $(this)).text(),
@@ -97,7 +96,9 @@ exportToExcel = {
     },
     "mappingData": function () {
         let _this = this;
-        this.exportData.map((e) => _this.addTableRows(e));
+        _this.tableBody.html('');
+        _this.addTableRows(tableHeaders);
+        _this.exportData.map((e) => _this.addTableRows(e));
     },
     "downloadExcelFile": function () {
         let _this = this;
