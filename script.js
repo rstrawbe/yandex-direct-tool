@@ -29,12 +29,11 @@ exportToExcel = {
     "tableBody": null,
     "init": function () {
         $("html").append("<table style='display: none' id='tableToExport'>");
+        $("html").append("<button type='button' id='exportToExcelBtn'>Скачать XLS");
         this.tableToExport = $("#tableToExport");
         this.tableToExport.append("<tbody>");
         this.tableBody = $("tbody", this.tableToExport);
-        this.tableBody.append(this.addTableRow(tableHeaders));
 
-        $("html").append("<button type='button' id='exportToExcelBtn'>Скачать XLS");
         this.exportToExcelBtn = $("#exportToExcelBtn");
         this.exportToExcelBtn.css({
             'position': 'sticky',
@@ -46,26 +45,27 @@ exportToExcel = {
     },
     "process": function () {
         this.exportToExcelBtn.prop("disabled", true);
+        this.exportData = [];
+        this.addTableRows(tableHeaders);
         this.prepareData();
         this.mappingData();
         this.downloadExcelFile();
-        this.tableBody.html(this.addTableRow(tableHeaders));
         this.exportToExcelBtn.prop("disabled", false);
     },
-    "addTableRow": function (data) {
-        let html;
+    "addTableRows": function (data) {
+        let _this = this;
         data.groupPhrases.map(function (e){
-            html = $("<tr></tr>");
-                html.append("<td>" + data.groupName)
+            let oneRow = $("<tr></tr>")
+                .append("<td>" + data.groupName)
                 .append("<td>" + data.groupNumber)
                 .append("<td>" + e.phrase);
             for (let i = 0; i < forecastsMax; i++) {
-                html.append("<td>" + (e.forecastRates[i] || ''))
+                oneRow.append("<td>" + (e.forecastRates[i] || ''))
                     .append("<td>" + (e.writtenOffPrice[i] || ''));
             }
-            html.append("<td>" + e.forecastTraffic);
+            oneRow.append("<td>" + e.forecastTraffic);
+            _this.tableBody.append(oneRow);
         })
-        return html;
     },
     "prepareData": function () {
         let _this = this;
@@ -97,9 +97,7 @@ exportToExcel = {
     },
     "mappingData": function () {
         let _this = this;
-        this.exportData.map(function (e){
-            _this.tableBody.append(_this.addTableRow(e));
-        })
+        this.exportData.map((e) => _this.addTableRows(e));
     },
     "downloadExcelFile": function () {
         let _this = this;
@@ -107,7 +105,7 @@ exportToExcel = {
         let wb = XLSX.utils.table_to_book(
             _this.tableToExport[0], {sheet:"List 1"}
         );
-        return  XLSX.writeFile(wb, filename + '.xls');
+        return XLSX.writeFile(wb, filename + '.xls');
     }
 }
-exportToExcel.init();
+$(document).ready(exportToExcel.init());
